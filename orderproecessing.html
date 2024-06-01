@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <!-- theme meta -->
+    <meta name="theme-name" content="quixlab" />
+  
+    <title>RODA</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <!-- Pignose Calender -->
+    <link href="./plugins/pg-calendar/css/pignose.calendar.min.css" rel="stylesheet">
+    <!-- Chartist -->
+    <link rel="stylesheet" href="./plugins/chartist/css/chartist.min.css">
+    <link rel="stylesheet" href="./plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+<!-- Custom Styles for Order Placement -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+    }
+
+    .section {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    overflow-y: auto; /* Added to enable scrolling within section */
+            max-height: calc(100vh - 160px); /* Adjust based on your header and footer heights */
+  
+}
+
+.section1{
+    background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 800px;   
+}
+    h2 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .tracking-section {
+        padding: 20px;
+        background-color: #e9ecef;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .tracking-section h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #495057;
+    }
+
+    .tracking-section p {
+        margin: 5px 0;
+        color: #333;
+    }
+
+    .progress-container {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding: 0 10px;
+    }
+
+    .progress-bar {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background-color: #e9ecef;
+        z-index: 0;
+        transform: translateY(-50%);
+    }
+
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 50%; /* Adjust this percentage to reflect the current progress */
+        background-color: #28a745;
+        z-index: 1;
+    }
+
+    .progress-step {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .progress-icon {
+        width: 40px;
+        height: 40px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 50%;
+        display: inline-block;
+        line-height: 40px;
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+
+    .progress-step.active .progress-icon {
+        background-color: #28a745;
+    }
+
+    .progress-label {
+        font-size: 14px;
+        color: #495057;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        color: #fff;
+        background-color: #007bff;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        margin-top: 20px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+        color: white;
+    }
+
+
+    .chat-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .chat-section h3 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .chat-section .chat-icon {
+            font-size: 30px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .chat-section p {
+            font-size: 16px;
+            color: #495057;
+            margin-bottom: 20px;
+        }
+
+        .chat-section .input-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .chat-section input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+        }
+
+        .chat-section button {
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .chat-section button:hover {
+            background-color: #0056b3;
+        }
+
+
+</style>
+</head>
+
+<body>
+
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <div class="nav-header">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <h1 class="text-white mx-auto">RODA</h1>
+                    
+                </a>
+            </div>
+        </div>
+        <!--**********************************
+            Nav header end
+        ***********************************-->
+
+        <!--**********************************
+            Header start
+        ***********************************-->
+        <div class="header">    
+            <div class="header-content clearfix">
+                
+                <div class="nav-control">
+                    <div class="hamburger">
+                        <span class="toggle-icon"><i class="icon-menu"></i></span>
+                    </div>
+                </div>
+                <div class="header-left">
+                    <div class="input-group icons">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-transparent border-0 pr-2 pr-sm-3" id="basic-addon1"><i class="mdi mdi-magnify"></i></span>
+                        </div>
+                        <input type="search" class="form-control" placeholder="Search Dashboard" aria-label="Search Dashboard">
+                        <div class="drop-down animated flipInX d-md-none">
+                            <form action="#">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+        </div>
+        <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+        <!--**********************************
+            Sidebar start
+        ***********************************-->
+        <div class="nk-sidebar">           
+            <div class="nk-nav-scroll">
+                <ul class="metismenu" id="menu">
+                    <!-- <li class="nav-label">Dashboard</li> -->
+                    <li>
+                        <a class="has-arrow mt-3" href="javascript:void()" aria-expanded="false">
+                            <i class="icon-speedometer menu-icon"></i><span class="nav-text">Order Details</span>
+                        </a>
+                        <ul aria-expanded="false">
+                            <li><a href="./index.html">Order OverView</a></li>
+                            <li><a href="./orderconf.html">Order Confirmation</a></li>
+                            <li><a href="./orderproecessing.html">Order Processing</a></li>
+                            <li><a href="./orderdelivery.html">Delivery</a></li>
+                            <li><a href="./ordercompletion.html">Order Completion</a></li>
+                            <li><a href="./postorder.html">Post Order</a></li>
+                        </ul>
+                    </li>
+                  
+                  
+                  
+                
+                    
+                  
+                    
+                   
+                   
+                 
+                    
+                  
+                </ul>
+            </div>
+        </div>
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+
+        
+
+              
+
+                
+
+           
+              
+
+            <!-- Order Placement Section -->
+            <div class="section" id="section3">
+                <h2><i class="fas fa-spinner"></i> Order Processing</h2>
+                <div class="tracking-section">
+                    <h3>Track Your Order</h3>
+                    <p><strong>Order Number:</strong> #123456</p>
+                    <p><strong>Total Amount:</strong> $150</p>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                    <div class="progress-step active">
+                        <div class="progress-icon"><i class="fas fa-check"></i></div>
+                        <div class="progress-label">Order Placed</div>
+                    </div>
+                    <div class="progress-step active">
+                        <div class="progress-icon"><i class="fas fa-box"></i></div>
+                        <div class="progress-label">Order Confirmed</div>
+                    </div>
+                    <div class="progress-step active">
+                        <div class="progress-icon"><i class="fas fa-cogs"></i></div>
+                        <div class="progress-label">Processing</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-icon"><i class="fas fa-pencil-alt"></i></div>
+                        <div class="progress-label">In Progress</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <div class="progress-label">Quality Check</div>
+                    </div>
+                    <div class="progress-step">
+                        <div class="progress-icon"><i class="fas fa-file-download"></i></div>
+                        <div class="progress-label">Completed</div>
+                    </div>
+                </div>
+                <a href="./orderdelivery.html" class="btn">View Order Delivery</a>
+           
+        <hr>
+            <div class="section1 chat-section">
+                <h3><i class="fas fa-comments chat-icon"></i> Chat with Seller</h3>
+                <p>If you have any questions or need further assistance, feel free to chat with the seller.</p>
+                <div class="input-group">
+                    <input type="text" placeholder="Type your message here...">
+                    <button type="button"><i class="fas fa-paper-plane"></i> Send</button>
+                </div>
+            </div>
+                
+        </div>
+             
+            </div>
+            <!-- #/ container -->
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+        
+        
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright &copy; Designed & Developed by Abdullah 2024</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <script src="plugins/common/common.min.js"></script>
+    <script src="js/custom.min.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/gleek.js"></script>
+    <script src="js/styleSwitcher.js"></script>
+
+    <!-- Chartjs -->
+    <script src="./plugins/chart.js/Chart.bundle.min.js"></script>
+    <!-- Circle progress -->
+    <script src="./plugins/circle-progress/circle-progress.min.js"></script>
+    <!-- Datamap -->
+    <script src="./plugins/d3v3/index.js"></script>
+    <script src="./plugins/topojson/topojson.min.js"></script>
+    <script src="./plugins/datamaps/datamaps.world.min.js"></script>
+    <!-- Morrisjs -->
+    <script src="./plugins/raphael/raphael.min.js"></script>
+    <script src="./plugins/morris/morris.min.js"></script>
+    <!-- Pignose Calender -->
+    <script src="./plugins/moment/moment.min.js"></script>
+    <script src="./plugins/pg-calendar/js/pignose.calendar.min.js"></script>
+    <!-- ChartistJS -->
+    <script src="./plugins/chartist/js/chartist.min.js"></script>
+    <script src="./plugins/chartist-plugin-tooltips/js/chartist-plugin-tooltip.min.js"></script>
+
+
+
+    <script src="./js/dashboard/dashboard-1.js"></script>
+
+</body>
+
+</html>
